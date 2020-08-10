@@ -1,11 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26124.0
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29926.136
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DB0A5E76-2600-46AA-9422-BD6CC2872D48}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "msgraphapi", "src\msgraphapi\msgraphapi.csproj", "{98F5E792-72C6-4094-8ED9-A543AA047DA2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "msgraphapi", "src\msgraphapi\msgraphapi.csproj", "{98F5E792-72C6-4094-8ED9-A543AA047DA2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0AF355A0-A396-49E0-AFC4-84EC20F85659}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,9 +21,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{98F5E792-72C6-4094-8ED9-A543AA047DA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -33,7 +36,13 @@ Global
 		{98F5E792-72C6-4094-8ED9-A543AA047DA2}.Release|x86.ActiveCfg = Release|Any CPU
 		{98F5E792-72C6-4094-8ED9-A543AA047DA2}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{98F5E792-72C6-4094-8ED9-A543AA047DA2} = {DB0A5E76-2600-46AA-9422-BD6CC2872D48}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E64F71B8-D575-4636-AEBA-C1B3FAAD86A2}
 	EndGlobalSection
 EndGlobal

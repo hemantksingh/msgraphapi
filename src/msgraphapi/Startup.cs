@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Identity.Client;
 
 namespace msgraphapi
 {
@@ -25,6 +26,17 @@ namespace msgraphapi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var config = new AzureADClientConfig(
+                Environment.GetEnvironmentVariable("AZUREAD_CLIENT_ID") ?? throw new ArgumentException("AZUREAD_CLIENT_ID is required"),
+                Environment.GetEnvironmentVariable("AZUREAD_CLIENT_SECRET") ?? throw new ArgumentException("AZUREAD_CLIENT_SECRET is required"),
+                Environment.GetEnvironmentVariable("AZUREAD_TENANT_ID") ?? throw new ArgumentException("AZUREAD_TENANT_ID is required"));
+
+            services.AddSingleton<IConfidentialClientApplication>(_ => ConfidentialClientApplicationBuilder
+                .Create(config.ClientId)
+                .WithClientSecret(config.ClientSecret)
+                .WithAuthority(config.Authority)
+                .Build());
+            services.AddMvc().AddNewtonsoftJson();
             services.AddControllers();
         }
 
