@@ -4,7 +4,9 @@ services:
   msgraphapi:
     image: hemantksingh/msgraphapi:latest
     container_name: msgraphapi
-    expose:
-      - "5000"
+    ports:
+      - 80:80
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
+      - AZUREAD_TENANT_ID=${AZUREAD_TENANT_ID}
+      - AZUREAD_CLIENT_ID=${AZUREAD_CLIENT_ID}
+      - AZUREAD_CLIENT_SECRET=${AZUREAD_CLIENT_SECRET}
