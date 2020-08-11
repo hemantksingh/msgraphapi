@@ -1,0 +1,10 @@
+version: "3.3"
+
+services:
+  msgraphapi:
+    image: hemantksingh/msgraphapi:latest
+    container_name: msgraphapi
+    expose:
+      - "5000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
