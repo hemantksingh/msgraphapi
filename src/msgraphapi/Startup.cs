@@ -32,6 +32,7 @@ namespace msgraphapi
                 .Build());
             services.AddMvc().AddNewtonsoftJson();
             services.AddControllers();
+            services.AddSwaggerGen();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -41,6 +42,15 @@ namespace msgraphapi
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+
+            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
+            // specifying the Swagger JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "MS Graph API");
+            });
 
             app.UseHttpsRedirection();
 
