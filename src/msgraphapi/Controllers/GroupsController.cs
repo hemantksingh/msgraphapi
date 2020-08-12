@@ -49,5 +49,31 @@ namespace msgraphapi.Controllers
                 return new ObjectResult($"Incorrect authority configuration, {ex.Message}");
             }
         }
+
+        [HttpGet]
+        [Route("{id}/users")]
+        public async Task<IActionResult> GetUsers(string id)
+        {
+            try
+            {
+                AuthenticationResult authenticationResult = await _clientApplication
+                    .AcquireTokenForClient(new[] { "https://graph.microsoft.com/.default" })
+                    .ExecuteAsync();
+
+                var httpClient = new HttpClient();
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authenticationResult.AccessToken);
+
+                var response = await httpClient.GetAsync($"https://graph.microsoft.com/v1.0/groups/{id}/members");
+                var content = await response.Content.ReadAsStringAsync();
+
+                var deserializeObject = JsonConvert.DeserializeObject<dynamic>(content);
+                return Ok(deserializeObject);
+            }
+            catch (MsalServiceException ex) when (ex.Message.Contains("AADSTS50049"))
+            {
+                _logger.LogError(ex, "Incorrect authority configuration");
+                return new ObjectResult($"Incorrect authority configuration, {ex.Message}");
+            }
+        }
     }
 }
