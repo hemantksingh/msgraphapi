@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -66,8 +67,11 @@ namespace msgraphapi.Controllers
                 var response = await httpClient.GetAsync($"https://graph.microsoft.com/v1.0/groups/{id}/members");
                 var content = await response.Content.ReadAsStringAsync();
 
-                var deserializeObject = JsonConvert.DeserializeObject<dynamic>(content);
-                return Ok(deserializeObject);
+                var deserializeObject = JsonConvert.DeserializeObject<Users>(content);
+
+                var users = deserializeObject.Value.Where(x => x.type == "#microsoft.graph.user");
+                
+                return Ok(users);
             }
             catch (MsalServiceException ex) when (ex.Message.Contains("AADSTS50049"))
             {

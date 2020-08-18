@@ -21,12 +21,13 @@ namespace msgraphapi.tests
         }
 
         [Fact]
-        public async Task GetUsersInAGroup()
+        public async Task GetUsersReturnsOnlyUsersInAGroup()
         {
             var response = await _httpClient.GetAsync("/groups/3164bf02-2ba3-420f-bbb8-4d6e1b9ac945/users");
             var stringResponse = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<dynamic>(stringResponse);
+            var result = JsonConvert.DeserializeObject<IEnumerable<User>>(stringResponse);
             Assert.NotNull(result);
+            Assert.Contains(result, x => x.type == "#microsoft.graph.user");
         }
     }
 }
