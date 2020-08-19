@@ -30,6 +30,7 @@ namespace msgraphapi
                 .WithClientSecret(config.ClientSecret)
                 .WithAuthority(config.Authority)
                 .Build());
+            services.AddTransient<TokenService>();
             services.AddMvc().AddNewtonsoftJson();
             services.AddControllers();
             services.AddSwaggerGen();
