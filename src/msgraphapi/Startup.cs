@@ -31,7 +31,8 @@ namespace msgraphapi
                 .WithAuthority(config.Authority)
                 .Build());
             services.AddTransient<TokenService>();
-            services.AddMvc().AddNewtonsoftJson();
+            services.AddMvc(options => { options.Filters.Add(typeof(HttpGlobalExceptionFilter));})
+                .AddNewtonsoftJson();
             services.AddControllers();
             services.AddSwaggerGen();
         }

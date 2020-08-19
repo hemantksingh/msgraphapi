@@ -22,7 +22,7 @@ namespace msgraphapi.Controllers
         {
             var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", await _tokenService.GetToken());
+                new AuthenticationHeaderValue("Bearer", await _tokenService.GetAccessToken());
 
             var response = await httpClient.GetAsync("https://graph.microsoft.com/v1.0/groups");
 
@@ -35,7 +35,7 @@ namespace msgraphapi.Controllers
         {
             var httpClient = new HttpClient();
             httpClient.DefaultRequestHeaders.Authorization =
-                new AuthenticationHeaderValue("Bearer", await _tokenService.GetToken());
+                new AuthenticationHeaderValue("Bearer", await _tokenService.GetAccessToken());
 
             var response = await httpClient.GetAsync($"https://graph.microsoft.com/v1.0/groups/{id}/members");
             var content = await response.GetContentAs<Users>();
