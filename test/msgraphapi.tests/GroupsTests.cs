@@ -20,12 +20,20 @@ namespace msgraphapi.tests
                 .UseStartup<Startup>()).CreateClient();
         }
 
+
+        [Fact]
+        public async Task GetAllGroups()
+        {
+            var response = await _httpClient.GetAsync("/groups");
+            var result = await response.GetContentAs<dynamic>();
+            Assert.NotNull(result);
+        }
+
         [Fact]
         public async Task GetUsersReturnsOnlyUsersInAGroup()
         {
             var response = await _httpClient.GetAsync("/groups/3164bf02-2ba3-420f-bbb8-4d6e1b9ac945/users");
-            var stringResponse = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<IEnumerable<User>>(stringResponse);
+            var result = await response.GetContentAs<IEnumerable<User>>();
             Assert.NotNull(result);
             Assert.Contains(result, x => x.type == "#microsoft.graph.user");
         }

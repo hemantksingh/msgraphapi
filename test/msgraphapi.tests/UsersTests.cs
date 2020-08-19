@@ -1,9 +1,7 @@
-using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
-using Newtonsoft.Json;
 using Xunit;
 
 namespace msgraphapi.tests
@@ -23,8 +21,7 @@ namespace msgraphapi.tests
         public async Task GetAllUsers()
         {
             var response = await _httpClient.GetAsync("/users");
-            var stringResponse = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<dynamic>(stringResponse);
+            var result = await response.GetContentAs<dynamic>();
             Assert.NotNull(result);
         }
     }

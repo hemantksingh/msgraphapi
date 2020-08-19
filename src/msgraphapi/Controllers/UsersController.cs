@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Client;
-using Newtonsoft.Json;
 
 namespace msgraphapi.Controllers
 {
@@ -34,10 +33,7 @@ namespace msgraphapi.Controllers
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authenticationResult.AccessToken);
 
                 var response = await httpClient.GetAsync("https://graph.microsoft.com/v1.0/users");
-                var content = await response.Content.ReadAsStringAsync();
-
-                var deserializeObject = JsonConvert.DeserializeObject<dynamic>(content);
-                return Ok(deserializeObject);
+                return Ok(response.GetContentAs<dynamic>());
             }
             catch (MsalServiceException ex) when(ex.Message.Contains("AADSTS50049"))
             {

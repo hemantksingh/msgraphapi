@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Client;
@@ -39,10 +35,8 @@ namespace msgraphapi.Controllers
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authenticationResult.AccessToken);
 
                 var response = await httpClient.GetAsync("https://graph.microsoft.com/v1.0/groups");
-                var content = await response.Content.ReadAsStringAsync();
 
-                var deserializeObject = JsonConvert.DeserializeObject<dynamic>(content);
-                return Ok(deserializeObject);
+                return Ok(response.GetContentAs<dynamic>());
             }
             catch (MsalServiceException ex) when (ex.Message.Contains("AADSTS50049"))
             {
@@ -65,11 +59,8 @@ namespace msgraphapi.Controllers
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authenticationResult.AccessToken);
 
                 var response = await httpClient.GetAsync($"https://graph.microsoft.com/v1.0/groups/{id}/members");
-                var content = await response.Content.ReadAsStringAsync();
-
-                var deserializeObject = JsonConvert.DeserializeObject<Users>(content);
-
-                var users = deserializeObject.Value.Where(x => x.type == "#microsoft.graph.user");
+                var content = await response.GetContentAs<Users>();
+                var users = content.Value.Where(x => x.type == "#microsoft.graph.user");
                 
                 return Ok(users);
             }
