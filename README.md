@@ -11,6 +11,7 @@ Graph Explorer is a web-based tool that you can use to build and test requests u
 ```sh
 # build with docker
 docker build -t hemantksingh/msgraphapi .
+docker build -t hemantksingh/msgraphapi-rproxy .
 
 # build with dotnet
 dotnet build
@@ -26,10 +27,9 @@ AZUREAD_CLIENT_ID=xxxx
 AZUREAD_CLIENT_SECRET=xxxx
 AZUREAD_TENANT_ID=xxxx
 
-# run with docker
-docker compose up
+# run with docker behind an nginx reverse proxy on: http://localhost/swagger
+docker-compose up
 
-# run with dotnet
+# run with dotnet standalone on: http://localhost:4000/swagger
 dtonet run
 ```
-

@@ -1,11 +1,18 @@
 version: "3.3"
 
 services:
+  nginx: 
+    image: hemantksingh/msgraphapi-rproxy:latest
+    container_name: nginx-rproxy
+    ports:
+      - 80:80
+      - 443:443
+  
   msgraphapi:
     image: hemantksingh/msgraphapi:latest
     container_name: msgraphapi
-    ports:
-      - 80:80
+    expose:
+      - "4000"
     environment:
       - AZUREAD_TENANT_ID=${AZUREAD_TENANT_ID}
       - AZUREAD_CLIENT_ID=${AZUREAD_CLIENT_ID}
