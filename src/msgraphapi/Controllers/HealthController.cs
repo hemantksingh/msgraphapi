@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
 
 namespace msgraphapi.Controllers
 {
@@ -23,6 +22,16 @@ namespace msgraphapi.Controllers
             Console.WriteLine(builder);
 
             return Ok("Healthy");
+        }
+
+        [HttpGet]
+        [Route("dependencies")]
+        public IActionResult GetConnections()
+        {
+            var redisConnection = new RedisConnection();
+            redisConnection.Add("foo", "bar");
+
+            return Ok(redisConnection.Get("foo"));
         }
     }
 }
