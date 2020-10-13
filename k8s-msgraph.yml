@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: msgraphapi
+  namespace: default
+  labels:
+    app: msgraphapi
+spec:
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 4000
+  selector:
+    app: msgraphapi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: msgraphapi
+  namespace: default
+  labels:
+    app: msgraphapi
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: msgraphapi
+  template:
+    metadata:
+      labels:
+        app: msgraphapi
+    spec:
+      containers:
+      - name: msgraphapi
+        image: hemantksingh/msgraphapi:latest
+        env:
+          - name: ASPNETCORE_ENVIRONMENT
+            value: Production
+          - name: AZUREAD_TENANT_ID
+            value: ""
+          - name: AZUREAD_CLIENT_SECRET
+            value: ""
+          - name: AZUREAD_CLIENT_ID
+            value: ""
+        imagePullPolicy: IfNotPresent
+
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: graph-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    # nginx.ingress.kubernetes.io/add-base-url : "true"
+    # Enable client certificate authentication
+    nginx.ingress.kubernetes.io/auth-tls-verify-client: "on"
+    nginx.ingress.kubernetes.io/auth-tls-secret: "default/local-ca"
+    nginx.ingress.kubernetes.io/auth-tls-verify-depth: "1"
+    nginx.ingress.kubernetes.io/auth-tls-pass-certificate-to-upstream: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2 #target URI where the traffic must be redirected
+spec:
+  rules:
+  - host: 13.93.79.119.nip.io
+    http:
+      paths:
+      - path: /graph(/|$)(.*) # the service doesn't know about this path, therefore it is rewritten using rewrite annotation https://github.com/kubernetes/ingress-nginx/blob/master/docs/examples/rewrite/README.md
+        backend:
+          serviceName: msgraphapi
+          servicePort: 80
+  tls:
+   - hosts:
+     - 13.93.79.119.nip.io
+     secretName: 13.93.79.119.nip.io-trusted-tls

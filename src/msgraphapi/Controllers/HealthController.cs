@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -10,18 +11,18 @@ namespace msgraphapi.Controllers
     {
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public IActionResult Get()
         {
+            var builder = new StringBuilder();
             foreach (var requestHeader in Request.Headers)
-            {
-                Console.WriteLine();
-                Console.WriteLine("Listing the request headers:");
-                Console.WriteLine($"${requestHeader.Key}: {requestHeader.Value} ");
+            {    
+                builder.AppendLine($"{requestHeader.Key}: {requestHeader.Value} ");
             }
+
+            Console.WriteLine("Listing the request headers:");
+            Console.WriteLine(builder);
 
             return Ok("Healthy");
         }
-
-
     }
 }
