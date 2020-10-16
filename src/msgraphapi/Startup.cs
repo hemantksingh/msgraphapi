@@ -44,6 +44,7 @@ namespace msgraphapi
             {
                 app.UseDeveloperExceptionPage();
             }
+            app.UsePathBase("/azuread");
 
             app.UseSwagger();
 
