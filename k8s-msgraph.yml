@@ -49,7 +49,7 @@ spec:
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
-  name: graph-ingress
+  name: azuread
   annotations:
     kubernetes.io/ingress.class: "nginx"
     # Enable client certificate authentication
