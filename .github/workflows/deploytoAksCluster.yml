@@ -1,0 +1,50 @@
+on: [push]
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    
+    - uses: azure/docker-login@v1
+      with:
+        login-server: beyondtrust.azurecr.io
+        username: ${{ secrets.acr_beyondtrust_username }}
+        password: ${{ secrets.acr_beyondtrust_password }}
+    
+    - name: Build and push image to ACR
+      id: build-image
+      run: |
+        docker build "$GITHUB_WORKSPACE/" -f  "Dockerfile" -t beyondtrust.azurecr.io/brahmaaks:${{ github.sha }}
+        docker push beyondtrust.azurecr.io/brahmaaks:${{ github.sha }}
+    
+    - uses: azure/k8s-set-context@v1
+      with:
+         kubeconfig: ${{ secrets.aks_brahmaaks_kubeConfig }}
+      id: login
+    
+    - name: Create namespace
+      run: |
+        namespacePresent=`kubectl get namespace | grep webapps | wc -l`
+        if [ $namespacePresent -eq 0 ]
+        then
+            echo `kubectl create namespace webapps`
+        fi
+
+    - uses: azure/k8s-create-secret@v1
+      with:
+        namespace: webapps
+        container-registry-url: beyondtrust.azurecr.io
+        container-registry-username: ${{ secrets.acr_beyondtrust_username }}
+        container-registry-password: ${{ secrets.acr_beyondtrust_password }}
+        secret-name: brahmaaksdockerauth
+       
+    - uses: azure/k8s-deploy@v1.2
+      with:
+        namespace: webapps
+        manifests: |
+          manifests/deployment.yml
+          manifests/service.yml
+        images: |
+          beyondtrust.azurecr.io/brahmaaks:${{ github.sha }}
+        imagepullsecrets: |
+          brahmaaksdockerauth
