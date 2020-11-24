@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: "brahmaaks-c612"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: "brahmaaks-c612"
+  template:
+    metadata:
+      labels:
+        app: "brahmaaks-c612"
+    spec:
+      containers:
+        - name: "brahmaaks-c612"
+          image: "beyondtrust.azurecr.io/brahmaaks"
+          ports:
+          - containerPort: 80
