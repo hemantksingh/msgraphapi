@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -12,7 +13,12 @@ namespace msgraphapi
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            Configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile("appsettings.secrets.json", optional: true)
+                .AddEnvironmentVariables()
+                .Build();
         }
 
         public IConfiguration Configuration { get; }
@@ -21,9 +27,13 @@ namespace msgraphapi
         public void ConfigureServices(IServiceCollection services)
         {
             var config = new AzureADClientConfig(
-                Environment.GetEnvironmentVariable("AZUREAD_CLIENT_ID") ?? throw new ArgumentException("AZUREAD_CLIENT_ID is required"),
-                Environment.GetEnvironmentVariable("AZUREAD_CLIENT_SECRET") ?? throw new ArgumentException("AZUREAD_CLIENT_SECRET is required"),
-                Environment.GetEnvironmentVariable("AZUREAD_TENANT_ID") ?? throw new ArgumentException("AZUREAD_TENANT_ID is required"));
+                Configuration["AzureAD:ClientId"] ?? Environment.GetEnvironmentVariable("AZUREAD_CLIENT_ID") ??
+                throw new ArgumentException("AZUREAD_CLIENT_ID is required"),
+                Configuration["AzureAD:ClientSecret"] ?? Environment.GetEnvironmentVariable("AZUREAD_CLIENT_SECRET") ??
+                throw new ArgumentException("AZUREAD_CLIENT_SECRET is required"),
+                Configuration["AzureAD:TenantId"] ?? Environment.GetEnvironmentVariable("AZUREAD_TENANT_ID") ??
+                throw new ArgumentException("AZUREAD_TENANT_ID is required")
+            );
 
             services.AddSingleton<IConfidentialClientApplication>(_ => ConfidentialClientApplicationBuilder
                 .Create(config.ClientId)
@@ -31,7 +41,7 @@ namespace msgraphapi
                 .WithAuthority(config.Authority)
                 .Build());
             services.AddTransient<TokenService>();
-            services.AddMvc(options => { options.Filters.Add(typeof(HttpGlobalExceptionFilter));})
+            services.AddMvc(options => { options.Filters.Add(typeof(HttpGlobalExceptionFilter)); })
                 .AddNewtonsoftJson();
             services.AddControllers();
             services.AddSwaggerGen();
@@ -44,16 +54,13 @@ namespace msgraphapi
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UsePathBase("/azuread");
 
+            app.UsePathBase("/azuread");
             app.UseSwagger();
 
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
             // specifying the Swagger JSON endpoint.
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "MS Graph API");
-            });
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "MS Graph API"); });
 
             app.UseHttpsRedirection();
 
@@ -61,10 +68,7 @@ namespace msgraphapi
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }
     }
 }
