@@ -37,13 +37,15 @@ spec:
         env:
           - name: ASPNETCORE_ENVIRONMENT
             value: Production
-          - name: AZUREAD_TENANT_ID
-            value: ""
-          - name: AZUREAD_CLIENT_SECRET
-            value: ""
-          - name: AZUREAD_CLIENT_ID
-            value: ""
-        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: secrets
+          mountPath: /app # application path in the container to which the volume gets mounted
+          readOnly: true
+        imagePullPolicy: Always
+      volumes:
+      - name: secrets
+        secret:
+          secretName: msgraphapi-secrets
 
 ---
 apiVersion: networking.k8s.io/v1beta1
@@ -53,20 +55,20 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "nginx"
     # Enable client certificate authentication
-    nginx.ingress.kubernetes.io/auth-tls-verify-client: "on"
-    nginx.ingress.kubernetes.io/auth-tls-secret: "default/local-ca"
-    nginx.ingress.kubernetes.io/auth-tls-verify-depth: "1"
-    nginx.ingress.kubernetes.io/auth-tls-pass-certificate-to-upstream: "true"
+    # nginx.ingress.kubernetes.io/auth-tls-verify-client: "on"
+    # nginx.ingress.kubernetes.io/auth-tls-secret: "default/local-ca"
+    # nginx.ingress.kubernetes.io/auth-tls-verify-depth: "1"
+    # nginx.ingress.kubernetes.io/auth-tls-pass-certificate-to-upstream: "true"
 spec:
   rules:
-  - host: 13.93.79.119.nip.io
+  - host: 51.124.13.153.nip.io
     http:
       paths:
       - path: /azuread
         backend:
           serviceName: msgraphapi
           servicePort: 80
-  tls:
-   - hosts:
-     - 13.93.79.119.nip.io
-     secretName: 13.93.79.119.nip.io-trusted-tls
+  # tls:
+  #  - hosts:
+  #    - 51.124.13.153.nip.io
+  #    secretName: 51.124.13.153.nip.io-trusted-tls
