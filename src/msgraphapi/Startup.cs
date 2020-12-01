@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -11,17 +10,12 @@ namespace msgraphapi
 {
     public class Startup
     {
+        public readonly IConfiguration Configuration;
+
         public Startup(IConfiguration configuration)
         {
-            Configuration = new ConfigurationBuilder()
-                .SetBasePath(Directory.GetCurrentDirectory())
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile("appsettings.secrets.json", optional: true)
-                .AddEnvironmentVariables()
-                .Build();
+            Configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -60,7 +54,7 @@ namespace msgraphapi
 
             // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.),
             // specifying the Swagger JSON endpoint.
-            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "MS Graph API"); });
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("azuread/swagger/v1/swagger.json", "MS Graph API"); });
 
             app.UseHttpsRedirection();
 
