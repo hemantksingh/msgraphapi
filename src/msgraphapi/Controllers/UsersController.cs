@@ -2,6 +2,7 @@
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace msgraphapi.Controllers
 {
@@ -10,10 +11,12 @@ namespace msgraphapi.Controllers
     public class UsersController : ControllerBase
     {
         private readonly TokenService _tokenService;
+        private readonly ILogger<UsersController> _logger;
 
-        public UsersController(TokenService tokenService)
+        public UsersController(TokenService tokenService, ILogger<UsersController> logger)
         {
             _tokenService = tokenService;
+            _logger = logger;
         }
 
         [HttpGet]
@@ -23,6 +26,7 @@ namespace msgraphapi.Controllers
             httpClient.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", await _tokenService.GetAccessToken());
 
+            _logger.LogInformation("Requesting users 'https://graph.microsoft.com/v1.0/users'");
             var response = await httpClient.GetAsync("https://graph.microsoft.com/v1.0/users");
             return Ok(response.GetContentAs<dynamic>());
         }
