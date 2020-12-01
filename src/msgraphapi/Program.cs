@@ -18,7 +18,7 @@ namespace msgraphapi
                 .ConfigureAppConfiguration((builderContext, builder) =>
                 {
                     builder.SetBasePath(Directory.GetCurrentDirectory())
-                        .AddJsonFile("appsettings.secrets.json", optional: true)
+                        .AddJsonFile("secrets/appsettings.secrets.json", optional: true)
                         .Build();
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
