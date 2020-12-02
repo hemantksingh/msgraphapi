@@ -11,13 +11,10 @@ namespace msgraphapi
         private readonly IConfidentialClientApplication _clientApplication;
         private readonly ILogger<TokenService> _logger;
 
-        public TokenService(AzureADClientConfig config, ILogger<TokenService> logger)
+        public TokenService(IConfidentialClientApplication confidentialClientApplication,
+            ILogger<TokenService> logger)
         {
-            _clientApplication = ConfidentialClientApplicationBuilder
-                .Create(config.ClientId)
-                .WithClientSecret(config.ClientSecret)
-                .WithAuthority(config.Authority)
-                .Build();
+            _clientApplication = confidentialClientApplication;
             _logger = logger;
         }
 

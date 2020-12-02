@@ -6,12 +6,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Client;
+using msgraphapi.MsGraph;
 
 namespace msgraphapi
 {
     public class Startup
     {
-        public ILogger<Startup> Logger { get; }
         public readonly IConfiguration Configuration;
 
         public Startup(IConfiguration configuration)
@@ -22,8 +22,7 @@ namespace msgraphapi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
-            services.AddTransient(p =>
+            services.AddSingleton<IConfidentialClientApplication>(p =>
             {
                 var logger = p.GetService<ILogger<Startup>>();
                 var clientId = Configuration["AzureAD:ClientId"];
@@ -31,23 +30,31 @@ namespace msgraphapi
                 {
                     logger.LogInformation("Looking up environment variable 'AZUREAD_CLIENT_ID'");
                     clientId = Environment.GetEnvironmentVariable("AZUREAD_CLIENT_ID") ??
-                        throw new ArgumentException("AZUREAD_CLIENT_ID is required");
+                               throw new ArgumentException("AZUREAD_CLIENT_ID is required");
                 }
                 else
                 {
                     logger.LogInformation("'AZUREAD_CLIENT_ID' loaded from app settings..");
                 }
 
-                return new AzureADClientConfig(
+                var config = new AzureADClientConfig(
                     clientId,
-                    Configuration["AzureAD:ClientSecret"] ?? Environment.GetEnvironmentVariable("AZUREAD_CLIENT_SECRET") ??
+                    Configuration["AzureAD:ClientSecret"] ??
+                    Environment.GetEnvironmentVariable("AZUREAD_CLIENT_SECRET") ??
                     throw new ArgumentException("AZUREAD_CLIENT_SECRET is required"),
                     Configuration["AzureAD:TenantId"] ?? Environment.GetEnvironmentVariable("AZUREAD_TENANT_ID") ??
                     throw new ArgumentException("AZUREAD_TENANT_ID is required")
                 );
+
+                return ConfidentialClientApplicationBuilder
+                    .Create(config.ClientId)
+                    .WithClientSecret(config.ClientSecret)
+                    .WithAuthority(config.Authority)
+                    .Build();
             });
-            
-            services.AddSingleton<TokenService>();
+
+            services.AddTransient<TokenService>();
+            services.AddTransient<MsGraphClient>();
             services.AddMvc(options => { options.Filters.Add(typeof(HttpGlobalExceptionFilter)); })
                 .AddNewtonsoftJson();
             services.AddControllers();
