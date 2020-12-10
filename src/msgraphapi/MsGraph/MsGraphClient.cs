@@ -21,9 +21,9 @@ namespace msgraphapi.MsGraph
         }
 
 
-        public async Task<IEnumerable<Domain>> GetSupportedDomains()
+        public async Task<IEnumerable<Domain>> GetDomainsAsync()
         {
-            _logger.LogInformation("Getting all Azure AD domains...");
+            _logger.LogInformation("Requesting Azure AD domains from Graph API...");
 
             var domains = new List<Domain>();
             var domainsPage = await _graphServiceClient.Domains
@@ -32,7 +32,8 @@ namespace msgraphapi.MsGraph
             
             // Get the domains on the first page
             domains.AddRange(domainsPage.CurrentPage.OfType<Microsoft.Graph.Domain>()
-                .Select(x => new Domain(x.Id, x.AuthenticationType)));
+                .Select(x => new Domain(x.Id, x.AuthenticationType, x.IsAdminManaged, x.IsDefault,
+                    x.IsInitial, x.IsRoot, x.IsVerified)));
 
             // Get the remaining domains. This is least performant way to retrieve data from Graph (or any REST API really).
             // Your app will be sitting there for a long time while it downloads all this data.
@@ -42,7 +43,8 @@ namespace msgraphapi.MsGraph
             {
                 domainsPage = await domainsPage.NextPageRequest.GetAsync();
                 domains.AddRange(domainsPage.CurrentPage.OfType<Microsoft.Graph.Domain>()
-                    .Select(x => new Domain(x.Id, x.AuthenticationType)));
+                    .Select(x => new Domain(x.Id, x.AuthenticationType, x.IsAdminManaged, x.IsDefault,
+                        x.IsInitial, x.IsRoot, x.IsVerified)));
             }
 
             return domains;

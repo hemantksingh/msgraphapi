@@ -8,17 +8,17 @@ namespace msgraphapi.Controllers
     [ApiController]
     public class DomainsController : ControllerBase
     {
-        private readonly MsGraphClient _msGraphClient;
+        private readonly DomainsService _domainsService;
 
-        public DomainsController(MsGraphClient msGraphClient)
+        public DomainsController(DomainsService domainsService)
         {
-            _msGraphClient = msGraphClient;
+            _domainsService = domainsService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var supportedDomains = await _msGraphClient.GetSupportedDomains();
+            var supportedDomains = await _domainsService.GetDomainsAsync(new Page(100, 1));
             return Ok(supportedDomains);
         }
     }

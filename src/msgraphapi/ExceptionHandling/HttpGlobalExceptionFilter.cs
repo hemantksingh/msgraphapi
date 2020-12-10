@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Net;
-using Microsoft.AspNetCore.Mvc;
+﻿using System.Net;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 
-namespace msgraphapi
+namespace msgraphapi.ExceptionHandling
 {
     public class HttpGlobalExceptionFilter : IExceptionFilter
     {
@@ -41,14 +39,6 @@ namespace msgraphapi
                 context.Result = new ErrorObjectResult(content);
                 context.HttpContext.Response.StatusCode = (int)content.status;
             }
-        }
-    }
-
-    class ErrorObjectResult : ObjectResult
-    {
-        public ErrorObjectResult(dynamic content) : base((object)content)
-        {
-            StatusCode = (int?) content.status;
         }
     }
 }

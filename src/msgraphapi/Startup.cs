@@ -1,11 +1,13 @@
 using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Client;
+using msgraphapi.ExceptionHandling;
 using msgraphapi.MsGraph;
 
 namespace msgraphapi
@@ -53,8 +55,18 @@ namespace msgraphapi
                     .Build();
             });
 
-            services.AddTransient<TokenService>();
+            MemoryCacheEntryOptions cacheExpirationOptions = new MemoryCacheEntryOptions
+            {
+                AbsoluteExpiration = DateTime.Now.AddMinutes(2880),
+                Priority = CacheItemPriority.Normal
+            };
+            services.AddSingleton(cacheExpirationOptions);
+            services.AddSingleton<IPagedCache<Group>, PagedCache<Group>>();
+            services.AddSingleton<IPagedCache<Domain>, PagedCache<Domain>>();
+            services.AddSingleton<AzureAdCache>();
             services.AddTransient<MsGraphClient>();
+            services.AddTransient<TokenService>();
+            services.AddTransient<DomainsService>();
             services.AddMvc(options => { options.Filters.Add(typeof(HttpGlobalExceptionFilter)); })
                 .AddNewtonsoftJson();
             services.AddControllers();
