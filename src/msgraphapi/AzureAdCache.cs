@@ -31,8 +31,8 @@ namespace msgraphapi
 
         public IEnumerable<Domain> GetDomains(Page page)
         {
-            _logger.LogDebug("Requesting page '{page.Number} with maximum of '{pageSize}' domains from cache",
-                page.Size, page.Number);
+            _logger.LogDebug("Requesting page '{pageNumber}' with maximum of '{pageSize}' domains from cache",
+                page.Number, page.Size);
             var domains = _pagedDomainCache.GetPage(AllDomains, page.Number, page.Size);
             _logger.LogDebug("'{NoOfDomains}' domain(s) found in the cache on page '{pageNumber}'", domains?.Count ?? 0,
                 page.Number);
