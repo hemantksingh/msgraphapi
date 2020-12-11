@@ -32,12 +32,14 @@ namespace msgraphapi
         {
             if (_cache.TryGetValue(key, out List<T> list))
             {
-                _logger.LogTrace("Adding {NoOfItems} items to existing cached entries with key {CacheKey}", items.Count, key);
+                _logger.LogTrace("Adding '{NoOfItems}' {ItemType}(s) to existing cached entries with key '{CacheKey}'",
+                    items.Count, typeof(T).Name, key);
                 list.AddRange(items);
             }
             else
             {
-                _logger.LogTrace("Adding {NoOfItems} items to new cache entry with key {CacheKey}", items.Count, key);
+                _logger.LogTrace("Adding '{NoOfItems}' {ItemType}(s) to new cache entry with key '{CacheKey}'",
+                    items.Count, typeof(T).Name, key);
                 list = items;
             }
 
@@ -47,27 +49,31 @@ namespace msgraphapi
 
         public void Remove(string key)
         {
-            _logger.LogTrace("Removing key {CacheKey} from cache", key);
+            _logger.LogTrace("Removing key '{CacheKey}' and all associated items from cache", key);
             _cache.Remove(key);
         }
 
         public void RemoveAll()
         {
             _logger.LogTrace("Evicting all cache entries");
-            ((MemoryCache)_cache).Compact(1.0);
-            _logger.LogDebug("Cache item count: {CacheItemCount}", ((MemoryCache)_cache).Count);
+            ((MemoryCache) _cache).Compact(1.0);
+            _logger.LogDebug("Cache item count: {CacheItemCount}", ((MemoryCache) _cache).Count);
         }
 
         public List<T> GetPage(string key, int pageNumber, int pageSize)
         {
-            if (pageNumber < 1)
-                throw new ArgumentOutOfRangeException(nameof(pageNumber),
-                    $"{nameof(pageNumber)} must be greater than zero");
-
             // Return null if not in the cache, return empty list if pageNumber is out of range
-            if (!_cache.TryGetValue(key, out List<T> list)) return null;
+            if (!_cache.TryGetValue(key, out List<T> list))
+            {
+                _logger.LogTrace("No '{ItemType}(s)' for key '{CacheKey}' found in cache", typeof(T).Name, key);
+                return null;
+            }
 
+            _logger.LogTrace("'{ItemCount}' '{ItemType}(s)' for key '{CacheKey}' found in cache", list.Count,
+                typeof(T).Name, key);
             var page = list.Skip(pageSize * (pageNumber - 1)).Take(pageSize).ToList();
+            _logger.LogTrace("Returning '{ItemCount}' of the top '{PageSize}' '{ItemType}(s)' on page '{PageNumber}'",
+                list.Count, pageSize, typeof(T).Name, pageNumber);
             return page;
         }
 

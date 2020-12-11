@@ -1,7 +1,10 @@
-﻿using System.Net.Http;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
+using msgraphapi.MsGraph;
 using Xunit;
 
 namespace msgraphapi.tests
@@ -21,8 +24,8 @@ namespace msgraphapi.tests
         public async Task GetAllDomains()
         {
             var response = await _httpClient.GetAsync("/domains");
-            // var result = await response.GetContentAs<List<Domain>>();
-            // Assert.True(result.Any());
+            var result = await response.GetContentAs<List<Domain>>();
+            Assert.True(result.Any());
         }
     }
 }

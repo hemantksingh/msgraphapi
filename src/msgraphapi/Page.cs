@@ -4,10 +4,10 @@ namespace msgraphapi
 {
     public class Page
     {
-        public readonly int Size;
         public readonly int Number;
+        public readonly int Size;
 
-        public Page(int size, int number)
+        public Page(int number, int size)
         {
             if (number < 1)
                 throw new InvalidRequestException($"{nameof(Page)} {nameof(number)} must be greater than zero");
@@ -18,8 +18,8 @@ namespace msgraphapi
             if (size > 10000)
                 throw new InvalidRequestException($"{nameof(Page)} {nameof(size)} must be less than 10000");
 
-            Size = size;
             Number = number;
+            Size = size;
         }
     }
 }

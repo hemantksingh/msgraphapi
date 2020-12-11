@@ -18,7 +18,7 @@ namespace msgraphapi.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var supportedDomains = await _domainsService.GetDomainsAsync(new Page(100, 1));
+            var supportedDomains = await _domainsService.GetDomainsAsync(new Page(1, 100));
             return Ok(supportedDomains);
         }
     }

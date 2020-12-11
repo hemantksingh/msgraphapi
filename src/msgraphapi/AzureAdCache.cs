@@ -31,17 +31,14 @@ namespace msgraphapi
 
         public IEnumerable<Domain> GetDomains(Page page)
         {
-            _logger.LogDebug("Requesting page '{pageNumber}' with maximum of '{pageSize}' domains from cache",
-                page.Number, page.Size);
-            var domains = _pagedDomainCache.GetPage(AllDomains, page.Number, page.Size);
-            _logger.LogDebug("'{NoOfDomains}' domain(s) found in the cache on page '{pageNumber}'", domains?.Count ?? 0,
-                page.Number);
-            return domains;
+            _logger.LogDebug("Requesting top '{pageSize}' domains on page '{pageNumber}' from cache",
+                page.Size, page.Number);
+            return _pagedDomainCache.GetPage(AllDomains, page.Number, page.Size);
         }
 
         public void AddDomains(IEnumerable<Domain> domains)
         {
-            _logger.LogDebug("Adding '{NoOfDomains}' domain(s) to the cache", domains.Count());
+            _logger.LogDebug("Adding '{DomainsCount}' domain(s) to the cache", domains.Count());
             lock (Padlock) // make caching updates thread safe
             {
                 _pagedDomainCache.Remove(AllDomains);
@@ -52,17 +49,14 @@ namespace msgraphapi
         public IEnumerable<Group> GetUsersGroups(Upn upn, Page page)
         {
             _logger.LogDebug(
-                "Requesting page '{pageNumber} with maximum of '{pageSize}' groups for upn '{upn.Value}' from cache",
-                page.Number, page.Size, upn.Value);
-            var usersGroups = _pagedGroupCache.GetPage(upn.Value, page.Number, page.Size);
-            _logger.LogDebug("'{NoOfGroups}' group(s) found in the cache on page '{pageNumber}'",
-                usersGroups?.Count ?? 0, page.Number);
-            return usersGroups;
+                "Requesting top '{pageSize}' groups on page '{pageNumber}' for upn '{upnValue}' from cache",
+                page.Size, page.Number, upn.Value);
+            return _pagedGroupCache.GetPage(upn.Value, page.Number, page.Size);
         }
 
         public void AddUsersGroups(Upn upn, IEnumerable<Group> groups)
         {
-            _logger.LogDebug("Adding '{NoOfGroups}' group(s) to the cache", groups.Count());
+            _logger.LogDebug("Adding '{GroupsCount}' group(s) to the cache", groups.Count());
             lock (Padlock) // make caching updates thread safe
             {
                 _pagedGroupCache.Remove(upn.Value);
