@@ -1,4 +1,6 @@
 .vs
+.idea
+.DS_Store
 **/*/bin
 **/*/obj
 *.csproj.user
