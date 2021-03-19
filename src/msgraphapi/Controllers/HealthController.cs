@@ -1,7 +1,6 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace msgraphapi.Controllers
 {
@@ -9,6 +8,12 @@ namespace msgraphapi.Controllers
     [ApiController]
     public class HealthController: ControllerBase
     {
+        private readonly ILogger<HealthController> _logger;
+
+        public HealthController(ILogger<HealthController> logger)
+        {
+            _logger = logger;
+        }
 
         [HttpGet]
         public IActionResult Get()
@@ -19,8 +24,8 @@ namespace msgraphapi.Controllers
                 builder.AppendLine($"{requestHeader.Key}: {requestHeader.Value} ");
             }
 
-            Console.WriteLine("Listing the request headers:");
-            Console.WriteLine(builder);
+            _logger.LogInformation("Listing the request headers:");
+            _logger.LogInformation(builder.ToString());
 
             return Ok("Healthy");
         }

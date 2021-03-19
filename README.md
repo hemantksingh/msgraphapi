@@ -19,10 +19,21 @@ dotnet build
 
 ## Running the application
 
-Running the application requires the Azure AD [app registration](https://docs.microsoft.com/en-us/azure/active-directory/develop/scenario-daemon-app-registration) details for authenticating with MS Identity platform and invoke the MS graph API with a token. The registration details are exported as environment variables
+Running the application requires the Azure AD [app registration](https://docs.microsoft.com/en-us/azure/active-directory/develop/scenario-daemon-app-registration) details for authenticating with MS Identity platform and invoke the MS graph API with a token. The registration details can be provided by adding an `appsettings.secrets.json` file or exported as environment variables
 
 ```sh
 
+# create an appsettings.secrets.json file
+{
+  "AzureAD": {
+    "ClientId": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
+    "ClientSecret": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX",
+    "TenantId": "XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX"
+  }
+}
+
+
+# or export the following environment variables
 AZUREAD_CLIENT_ID=xxxx
 AZUREAD_CLIENT_SECRET=xxxx
 AZUREAD_TENANT_ID=xxxx

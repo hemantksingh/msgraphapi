@@ -37,13 +37,15 @@ spec:
         env:
           - name: ASPNETCORE_ENVIRONMENT
             value: Production
-          - name: AZUREAD_TENANT_ID
-            value: ""
-          - name: AZUREAD_CLIENT_SECRET
-            value: ""
-          - name: AZUREAD_CLIENT_ID
-            value: ""
-        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: secrets
+          mountPath: /app/secrets # application secrets path in the container to which the volume gets mounted
+          readOnly: true
+        imagePullPolicy: Always
+      volumes:
+      - name: secrets
+        secret:
+          secretName: msgraphapi-secrets
 
 ---
 apiVersion: networking.k8s.io/v1beta1
@@ -59,7 +61,7 @@ metadata:
     nginx.ingress.kubernetes.io/auth-tls-pass-certificate-to-upstream: "true"
 spec:
   rules:
-  - host: 13.93.79.119.nip.io
+  - host: 51.124.13.153.nip.io
     http:
       paths:
       - path: /azuread
@@ -68,5 +70,5 @@ spec:
           servicePort: 80
   tls:
    - hosts:
-     - 13.93.79.119.nip.io
-     secretName: 13.93.79.119.nip.io-trusted-tls
+     - 51.124.13.153.nip.io
+     secretName: 51.124.13.153.nip.io-trusted-tls

@@ -1,25 +1,33 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Microsoft.Identity.Client;
+
 namespace msgraphapi
 {
     public class TokenService
     {
         private readonly IConfidentialClientApplication _clientApplication;
+        private readonly ILogger<TokenService> _logger;
 
-        public TokenService(IConfidentialClientApplication clientApplication)
+        public TokenService(IConfidentialClientApplication confidentialClientApplication,
+            ILogger<TokenService> logger)
         {
-            _clientApplication = clientApplication;
+            _clientApplication = confidentialClientApplication;
+            _logger = logger;
         }
 
         public async Task<string> GetAccessToken()
         {
             try
             {
+                _logger.LogInformation("Requesting access token for confidential client from authority {Authority}",
+                    _clientApplication.Authority);
                 AuthenticationResult authenticationResult = await _clientApplication
                     .AcquireTokenForClient(new[] {"https://graph.microsoft.com/.default"})
                     .ExecuteAsync();
+                _logger.LogDebug("Access token received");
                 return authenticationResult.AccessToken;
             }
             catch (MsalUiRequiredException ex)
@@ -39,10 +47,9 @@ namespace msgraphapi
         }
     }
 
-    
+
     public class ConfigurationException : Exception
     {
-
         public ConfigurationException()
         {
         }
