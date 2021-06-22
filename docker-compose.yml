@@ -1,12 +1,12 @@
 version: "3.3"
 
 services:
-  nginx: 
-    image: hemantksingh/msgraphapi-rproxy:latest
-    container_name: nginx-rproxy
+  haproxy: 
+    image: hemantksingh/haproxy:latest
+    container_name: haproxy
     ports:
-      - 80:80
-      - 443:443
+      - 8080:80
+      - 1337:1337
   
   msgraphapi:
     image: hemantksingh/msgraphapi:latest

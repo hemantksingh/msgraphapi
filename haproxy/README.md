@@ -10,6 +10,8 @@
 # Build the docker image
 docker build -f Dockerfile.haproxy -t hemantksingh/haproxy .
 
-# Run on host port 4000 
-docker run -it -p 8080:4000 hemantksingh/haproxy
+# Run haproxy on host port 80
+docker run -it -p 8080:80 -p 1337:1337 hemantksingh/haproxy
 ```
+
+You should be able to see the haproxy `stats` page on the host at http://localhost:1337
