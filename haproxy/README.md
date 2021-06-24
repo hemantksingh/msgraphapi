@@ -18,3 +18,7 @@ You should be able to access the
 
 * haproxy `stats` page on the host at http://localhost:1337
 * api at http://localhost/azuread/domains
+
+## Troubleshooting haproxy
+
+https://www.digitalocean.com/community/tutorials/how-to-troubleshoot-common-haproxy-errors
