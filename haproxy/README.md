@@ -14,4 +14,7 @@ docker build -f Dockerfile.haproxy -t hemantksingh/haproxy .
 docker run -it -p 8080:80 -p 1337:1337 hemantksingh/haproxy
 ```
 
-You should be able to see the haproxy `stats` page on the host at http://localhost:1337
+You should be able to access the
+
+* haproxy `stats` page on the host at http://localhost:1337
+* api at http://localhost/azuread/domains
