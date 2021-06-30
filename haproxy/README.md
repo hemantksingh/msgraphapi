@@ -17,6 +17,7 @@ docker run -it -p 8080:80 -p 1337:1337 hemantksingh/haproxy
 You should be able to access the
 
 * haproxy `stats` page on the host at http://localhost:1337
+* prometheus metrics at http://localhost/metrics
 * api at http://localhost/azuread/domains
 
 ## Troubleshooting haproxy
