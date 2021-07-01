@@ -1,5 +1,5 @@
 
-# Setup
+# HAProxy load balancer setup
 
 * https://github.com/haproxytech/haproxy-docker-ubuntu
 
@@ -13,12 +13,6 @@ docker build -f Dockerfile.haproxy -t hemantksingh/haproxy .
 # Run haproxy on host port 80
 docker run -it -p 8080:80 -p 1337:1337 hemantksingh/haproxy
 ```
-
-You should be able to access the
-
-* haproxy `stats` page on the host at http://localhost:1337
-* prometheus metrics at http://localhost/metrics
-* api at http://localhost/azuread/domains
 
 ## Troubleshooting haproxy
 

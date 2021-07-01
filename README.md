@@ -38,9 +38,32 @@ AZUREAD_CLIENT_ID=xxxx
 AZUREAD_CLIENT_SECRET=xxxx
 AZUREAD_TENANT_ID=xxxx
 
-# run with docker behind an nginx reverse proxy on: http://localhost/swagger
-docker-compose up
+```
 
-# run with dotnet standalone on: http://localhost:4000/swagger
+### Run the app with an nginx reverse proxy
+
+```sh
+authPassword=<authPassword> docker compose -f docker-compose-nginx.yml up --build
+```
+
+The API can be accessed at: http://localhost/azuread/swagger
+
+### Run the app with haproxy load balancer
+
+```sh
+docker compose -f docker-compose-haproxy.yml up --build
+```
+
+You should be able to access
+
+* haproxy `stats` page on the host at http://localhost:1337
+* prometheus metrics at http://localhost/metrics
+* API at http://localhost/azuread/swagger
+
+### Run with dotnet standalone
+
+```sh
 dtonet run
 ```
+
+The API can be accessed at: http://localhost:4000/swagger
