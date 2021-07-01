@@ -1,15 +1,24 @@
-version: "3.3"
+version: "3.9"
 
 services:
   nginx: 
-    image: hemantksingh/msgraphapi-rproxy:latest
-    container_name: nginx-rproxy
+    image: hemantksingh/nginx:latest
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+      args:
+        - authUsername=admin
+        - authPassword=${authPassword}
+    container_name: nginx
     ports:
       - 80:80
       - 443:443
-  
+      
   msgraphapi:
     image: hemantksingh/msgraphapi:latest
+    build: 
+      context: .
+      dockerfile: Dockerfile
     container_name: msgraphapi
     expose:
       - "4000"
