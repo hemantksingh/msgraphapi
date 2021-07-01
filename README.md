@@ -6,12 +6,11 @@ Provides integration with MS graph API using the client credentials flow for a [
 
 Graph Explorer is a web-based tool that you can use to build and test requests using Microsoft Graph APIs. You can access Graph Explorer at: `https://developer.microsoft.com/en-us/graph/graph-explore`
 
-## Build
+## Building the application
 
 ```sh
 # build with docker
 docker build -t hemantksingh/msgraphapi .
-docker build -t hemantksingh/msgraphapi-rproxy .
 
 # build with dotnet
 dotnet build
@@ -40,7 +39,9 @@ AZUREAD_TENANT_ID=xxxx
 
 ```
 
-### Run the app with an nginx reverse proxy
+### Run with nginx reverse proxy
+
+This runs the API behind an nginx reverse proxy which has basic authentication enabled
 
 ```sh
 authPassword=<authPassword> docker compose -f docker-compose-nginx.yml up --build
@@ -48,7 +49,9 @@ authPassword=<authPassword> docker compose -f docker-compose-nginx.yml up --buil
 
 The API can be accessed at: http://localhost/azuread/swagger
 
-### Run the app with haproxy load balancer
+### Run with haproxy load balancer
+
+This runs the API behind HAProxy load balancer 
 
 ```sh
 docker compose -f docker-compose-haproxy.yml up --build

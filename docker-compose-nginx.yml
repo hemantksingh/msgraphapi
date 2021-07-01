@@ -5,7 +5,7 @@ services:
     image: hemantksingh/nginx:latest
     build:
       context: .
-      dockerfile: Dockerfile.nginx
+      dockerfile: nginx/Dockerfile
       args:
         - authUsername=admin
         - authPassword=${authPassword}

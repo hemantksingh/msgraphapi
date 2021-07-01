@@ -5,7 +5,7 @@ services:
     image: hemantksingh/haproxy:latest
     build:
       context: .
-      dockerfile: Dockerfile.haproxy
+      dockerfile: haproxy/Dockerfile
     container_name: haproxy
     ports:
       - 80:80

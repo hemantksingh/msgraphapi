@@ -8,7 +8,7 @@
 ```sh
 
 # Build the docker image
-docker build -f Dockerfile.haproxy -t hemantksingh/haproxy .
+docker build -f haproxy/Dockerfile -t hemantksingh/haproxy .
 
 # Run haproxy on host port 80
 docker run -it -p 8080:80 -p 1337:1337 hemantksingh/haproxy
