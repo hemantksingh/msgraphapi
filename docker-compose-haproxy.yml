@@ -11,12 +11,25 @@ services:
       - 80:80
       - 1337:1337
       
-  msgraphapi:
+  msgraphapi1:
     image: hemantksingh/msgraphapi:latest
     build: 
       context: .
       dockerfile: Dockerfile
-    container_name: msgraphapi
+    container_name: msgraphapi1
+    expose:
+      - "4000"
+    environment:
+      - AZUREAD_TENANT_ID=${AZUREAD_TENANT_ID}
+      - AZUREAD_CLIENT_ID=${AZUREAD_CLIENT_ID}
+      - AZUREAD_CLIENT_SECRET=${AZUREAD_CLIENT_SECRET}
+
+  msgraphapi2:
+    image: hemantksingh/msgraphapi:latest
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: msgraphapi2
     expose:
       - "4000"
     environment:

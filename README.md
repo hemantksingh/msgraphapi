@@ -51,7 +51,7 @@ The API can be accessed at: http://localhost/azuread/swagger
 
 ### Run with haproxy load balancer
 
-This runs the API behind HAProxy load balancer 
+This runs the API behind HAProxy load balancer
 
 ```sh
 docker compose -f docker-compose-haproxy.yml up --build
