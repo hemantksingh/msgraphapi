@@ -60,8 +60,13 @@ docker compose -f docker-compose-haproxy.yml up --build
 You should be able to access
 
 * haproxy `stats` page on the host at http://localhost:1337
-* prometheus metrics at http://localhost/metrics
-* API at http://localhost/azuread/swagger
+* haproxy prometheus metrics at http://localhost/metrics
+* haproxy [dataplane API](https://www.haproxy.com/blog/new-haproxy-data-plane-api/) at http://localhost:5555 
+```sh
+curl --get --user admin:adminpwd \
+    http://localhost:5555/v2/services/haproxy/configuration/backends
+```
+* AzureAD API at http://localhost/azuread/swagger
 
 ### Run with dotnet standalone
 
@@ -69,4 +74,4 @@ You should be able to access
 dtonet run
 ```
 
-The API can be accessed at: http://localhost:4000/swagger
+The AzureAD API can be accessed at: http://localhost:4000/swagger

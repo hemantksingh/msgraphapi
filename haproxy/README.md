@@ -11,7 +11,7 @@
 docker build -f haproxy/Dockerfile -t hemantksingh/haproxy .
 
 # Run haproxy on host port 80
-docker run -it -p 8080:80 -p 1337:1337 hemantksingh/haproxy
+docker run -it -p 8080:80 -p 1337:1337 -p 5555:5555 hemantksingh/haproxy
 ```
 
 ## Dataplane API
