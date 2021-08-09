@@ -25,6 +25,8 @@ curl --get --user admin:adminpwd \
 
 ```
 
+Further API usage can be found on the official docs: https://www.haproxy.com/documentation/hapee/latest/api/data-plane-api/usage/
+
 ## Troubleshooting haproxy
 
 https://www.digitalocean.com/community/tutorials/how-to-troubleshoot-common-haproxy-errors
