@@ -10,6 +10,7 @@ services:
     ports:
       - 80:80
       - 1337:1337
+      - 5555:5555
       
   msgraphapi1:
     image: hemantksingh/msgraphapi:latest
